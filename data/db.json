@@ -1,0 +1,80 @@
+{
+  "products": [
+    {
+      "id": "prod_1",
+      "name": "Hydrating Hyaluronic Serum",
+      "slug": "hydrating-hyaluronic-serum",
+      "price": "$24.99",
+      "categorySlug": "skincare",
+      "description": "A lightweight, fast-absorbing serum designed to deeply hydrate and plump the skin. Formulated with multi-molecular weight hyaluronic acid to target multiple layers of skin hydration.",
+      "ingredients": [
+        "Hyaluronic Acid (Multi-Molecular)",
+        "Provitamin B5 (Panthenol)",
+        "Glycerin",
+        "Allantoin"
+      ],
+      "images": [
+        "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=600&auto=format&fit=crop&q=80"
+      ],
+      "reviews": [
+        { "id": "r1", "author": "Sarah M.", "rating": 5, "comment": "Excellent hydrator!", "date": "2026-05-12" }
+      ],
+      "stock": 45,
+      "isActive": true
+    },
+    {
+      "id": "prod_2",
+      "name": "Organic Matcha Powder",
+      "slug": "organic-matcha-powder",
+      "price": "$19.99",
+      "categorySlug": "wellness",
+      "description": "Ceremonial grade organic green tea powder sourced directly from Uji, Japan.",
+      "ingredients": [
+        "100% Organic Stone-Ground Green Tea Leaves"
+      ],
+      "images": [
+        "https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=600&auto=format&fit=crop&q=80"
+      ],
+      "reviews": [],
+      "stock": 20,
+      "isActive": true
+    }
+  ],
+  "categories": [
+    {
+      "id": "cat_1",
+      "name": "Skincare",
+      "slug": "skincare",
+      "description": "Premium treatments and hydrators formulated for optimal dermal health.",
+      "image": "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=100&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": "cat_2",
+      "name": "Wellness",
+      "slug": "wellness",
+      "description": "Organic dietary and botanical ingredients to align physical systems.",
+      "image": "https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=100&auto=format&fit=crop&q=80"
+    }
+  ],
+  "offers": [
+    {
+      "id": "off_1",
+      "code": "HEALTH10",
+      "discountType": "percentage",
+      "value": 10,
+      "isActive": true,
+      "expiresAt": "2026-12-31"
+    }
+  ],
+  "heroSlides": [
+    {
+      "id": "slide_1",
+      "title": "Premium Clinical Formulations",
+      "subtitle": "Discover organic Matcha and medical-grade Hyaluronic serums designed for targeted care.",
+      "imageUrl": "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=1200&auto=format&fit=crop&q=80",
+      "linkUrl": "/products/hydrating-hyaluronic-serum",
+      "order": 1,
+      "isActive": true
+    }
+  ]
+}

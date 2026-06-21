@@ -1,3 +1,4 @@
+// components/product-showcase.tsx
 "use client"
 
 import { Button } from "@/components/ui/button"
@@ -5,8 +6,15 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { MessageCircle, Package, Clock, Droplets, Zap } from "lucide-react"
 import { useEffect, useRef } from "react"
+import Image from "next/image"
+import Link from "next/link"
+import { Product } from "@/lib/types" // <-- Import the database Product model!
 
-export function ProductShowcase() {
+interface ProductShowcaseProps {
+  products: Product[]
+}
+
+export function ProductShowcase({ products }: ProductShowcaseProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
 
   const features = [
@@ -104,6 +112,62 @@ export function ProductShowcase() {
             ))}
           </div>
         </div>
+
+        {/* ==========================================================================
+           DYNAMIC FEATURED PRODUCTS SECTION (PRISMA DATABASE DRIVEN)
+           ========================================================================== */}
+        {products && products.length > 0 && (
+          <div className="mt-20 mb-16 border-t border-gray-800/80 pt-16">
+            <h3 className="text-3xl font-bold text-center text-white mb-2">
+              Featured <span className="text-yellow-400">Products</span>
+            </h3>
+            <p className="text-gray-400 text-center mb-12 max-w-lg mx-auto">
+              Explore our laboratory-certified botanical formulas direct from the database
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
+              {products.slice(0, 3).map((product) => (
+                <div
+                  key={product.id}
+                  className="group relative flex flex-col justify-between border border-gray-800 rounded-2xl bg-gray-900/50 p-5 hover:border-yellow-500/50 transition-all hover:scale-[1.02] duration-300"
+                >
+                  <div>
+                    <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-gray-950">
+                      <Image
+                        src={product.images[0] || 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=600&auto=format&fit=crop&q=80'}
+                        alt={product.name}
+                        fill
+                        className="h-full w-full object-cover object-center transition duration-300 group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                      />
+                    </div>
+                    <div className="mt-4 flex justify-between items-start gap-4">
+                      <div>
+                        <span className="text-xs text-yellow-500 font-semibold uppercase tracking-wider">
+                          {product.categorySlug}
+                        </span>
+                        <h4 className="text-lg font-bold text-white mt-1">
+                          <Link href={`/products/${product.slug}`}>
+                            <span aria-hidden="true" className="absolute inset-0" />
+                            {product.name}
+                          </Link>
+                        </h4>
+                      </div>
+                      <p className="text-lg font-extrabold text-yellow-400 shrink-0">{product.price}</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 pt-4 border-t border-gray-800/60 flex items-center justify-between text-xs text-gray-400">
+                    <span>{product.reviews.length} {product.reviews.length === 1 ? 'Review' : 'Reviews'}</span>
+                    <span className="text-yellow-500 font-semibold group-hover:underline">
+                      View Specs &rarr;
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* CTA Section */}
         <div className="text-center">

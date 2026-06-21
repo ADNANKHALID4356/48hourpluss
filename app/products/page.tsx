@@ -1,23 +1,33 @@
-import type { Metadata } from "next"
-import { ProductGallery } from "@/components/product-gallery"
+// app/products/page.tsx
 
-export const metadata: Metadata = {
-  title: "Shop Products",
-  description: "Browse 48 Hours Plus Herbal Honey — premium Turkish formula, lab-tested and certified.",
-}
+import { getProducts, getCategories } from '@/lib/db'; // <-- Imports from your active Prisma database!
+import ProductCatalog from '@/components/ProductCatalog';
 
-export default function ProductsPage() {
+export const metadata = {
+  title: 'Product Catalog',
+  description: 'Explore our catalog of premium ingredients and formulas.',
+};
+
+// Mark the function as async so we can await database queries
+export default async function CatalogPage() {
+  // Fetch live products and categories from SQLite
+  const products = await getProducts();
+  const categories = await getCategories();
+  
+  // Extract category names for the filtering UI tabs
+  const categoryNames = categories.map((c) => c.name);
+
   return (
-    <div className="pt-24">
-      <div className="container mx-auto px-4 py-8 text-center">
-        <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-          Our <span className="text-yellow-400">Products</span>
-        </h1>
-        <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-          More products are on the way — here's what we currently offer.
+    <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <div className="space-y-4 mb-8">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Our Catalog</h1>
+        <p className="text-lg text-gray-500">
+          Discover high-quality, targeted formulations matching your physical routine.
         </p>
       </div>
-      <ProductGallery />
-    </div>
-  )
+
+      {/* Pass the dynamic database products and categories to the catalog grid */}
+      <ProductCatalog products={products} categories={categoryNames} />
+    </main>
+  );
 }

@@ -1,0 +1,79 @@
+// prisma/schema.prisma
+// prisma/schema.prisma
+
+datasource db {
+  provider = "sqlite"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ... keep all your models (Category, Product, etc.) exactly the same below
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  description String?
+  image       String?
+  products    Product[]
+}
+
+model Product {
+  id           String         @id @default(uuid())
+  name         String
+  slug         String         @unique
+  price        String
+  description  String
+  stock        Int            @default(1)
+  isActive     Boolean        @default(true)
+  categorySlug String
+  category     Category       @relation(fields: [categorySlug], references: [slug])
+  ingredients  Ingredient[]
+  images       ProductImage[]
+  reviews      Review[]
+}
+
+model Ingredient {
+  id        String  @id @default(uuid())
+  name      String
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model ProductImage {
+  id        String  @id @default(uuid())
+  url       String
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+  id        String  @id @default(uuid())
+  author    String
+  rating    Int
+  comment   String
+  date      String
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Offer {
+  id           String   @id @default(uuid())
+  code         String   @unique
+  discountType String   // "percentage" | "fixed"
+  value        Float
+  isActive     Boolean  @default(true)
+  expiresAt    String?
+}
+
+model HeroSlide {
+  id        String   @id @default(uuid())
+  title     String
+  subtitle  String?
+  imageUrl  String
+  linkUrl   String?
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+}
