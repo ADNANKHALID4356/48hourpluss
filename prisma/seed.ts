@@ -1,12 +1,12 @@
 // prisma/seed.ts
 
 import { PrismaClient } from '@prisma/client';
-import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
-import path from 'path';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
 
-// Dynamically generate the absolute path to prisma/dev.db
-const absoluteDbPath = path.resolve(process.cwd(), 'prisma', 'dev.db');
-const adapter = new PrismaBetterSqlite3({ url: absoluteDbPath });
+// Standalone script uses the unpooled connection URL for execution safety
+const pool = new Pool({ connectionString: process.env.DIRECT_URL || process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {

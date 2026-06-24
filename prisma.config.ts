@@ -1,15 +1,12 @@
 // prisma.config.ts
 import { defineConfig } from 'prisma/config';
-import path from 'path';
 import 'dotenv/config';
-
-// Dynamically generate the absolute path to prisma/dev.db
-const absoluteDbPath = path.resolve(process.cwd(), 'prisma', 'dev.db');
 
 export default defineConfig({
   schema: './prisma/schema.prisma',
   datasource: {
-    url: `file:${absoluteDbPath}`,
+    // Migrations require a direct connection to acquire system locks
+    url: process.env.DIRECT_URL || process.env.DATABASE_URL || '',
   },
   migrations: {
     seed: 'npx tsx ./prisma/seed.ts',

@@ -1,17 +1,32 @@
-// lib/db.ts (Initialization block)
+// lib/db.ts (Over-write the Pool initialization section near the top)
 
 import { PrismaClient } from '@prisma/client';
-import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
-import path from 'path';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
 import { Product, Category, Offer, HeroSlide } from './types';
 
-// Dynamically generate the absolute path to prisma/dev.db
-const absoluteDbPath = path.resolve(process.cwd(), 'prisma', 'dev.db');
+// Use the working DIRECT_URL as the primary runtime connection for local development
+const connectionString = process.env.DIRECT_URL || process.env.DATABASE_URL;
 
-// Instantiate the Prisma 7 SQLite adapter using the identical absolute path
-const adapter = new PrismaBetterSqlite3({ url: absoluteDbPath });
+// temporary diagnostic log to verify connection string parsing and security
+// DIAGNOSTIC LOG (Safe - hides password)
+if (connectionString) {
+  const parsed = new URL(connectionString);
+  console.log("-----------------------------------------");
+  console.log("DATABASE RESOLUTION DIAGNOSTIC:");
+  console.log("Host:", parsed.host);
+  console.log("Database:", parsed.pathname);
+  console.log("Has Password:", !!parsed.password);
+  console.log("Password Length:", parsed.password ? parsed.password.length : 0);
+  console.log("-----------------------------------------");
+}
 
-// Initialize PrismaClient with the driver adapter
+
+
+const pool = new Pool({ connectionString });
+const adapter = new PrismaPg(pool);
+
+// Initialize PrismaClient with the PostgreSQL driver adapter
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 export const prisma = globalForPrisma.prisma || new PrismaClient({ adapter });
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
@@ -20,7 +35,6 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
    PRODUCTS CRUD (PRISMA IMPLEMENTATION)
    ========================================================================== */
 // ... keep all other functions (getProducts, saveProduct, etc.) exactly the same below
-
 export async function getProducts(options?: { categorySlug?: string; includeInactive?: boolean }): Promise<Product[]> {
   const dbProducts = await prisma.product.findMany({
     where: {
@@ -34,7 +48,6 @@ export async function getProducts(options?: { categorySlug?: string; includeInac
     },
   });
 
-  // Map database relational schemas to application TypeScript Interfaces
   return dbProducts.map((p) => ({
     id: p.id,
     name: p.name,
@@ -99,7 +112,6 @@ export async function saveProduct(product: Product): Promise<Product> {
       description: product.description,
       stock: product.stock,
       isActive: product.isActive,
-      // Clear and re-create relational records for simplicity during update operations
       images: {
         deleteMany: {},
         create: product.images.map((url) => ({ url })),

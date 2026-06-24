@@ -1,3 +1,4 @@
+// components/header.tsx
 "use client"
 
 import { useState } from "react"
@@ -5,7 +6,8 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet"
-import { MessageCircle, Menu } from "lucide-react"
+import { MessageCircle, Menu, ShoppingBag } from "lucide-react"
+import { useCart } from "./CartProvider" // <-- Import the cart hook!
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -17,6 +19,9 @@ const navLinks = [
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  
+  // Destructure cart helper actions
+  const { getCartItemCount, setIsCartOpen } = useCart()
 
   const openWhatsApp = () => {
     window.open("https://wa.me/923194405935?text=Hi, I'm interested in 48 Hours Plus Herbal Honey", "_blank")
@@ -42,6 +47,20 @@ export function Header() {
         </nav>
 
         <div className="flex items-center space-x-3">
+          {/* Global Cart Open Trigger */}
+          <Button
+            variant="ghost"
+            className="relative text-white hover:text-yellow-400 hover:bg-gray-900/50 p-2 px-3 flex items-center gap-2"
+            onClick={() => setIsCartOpen(true)}
+          >
+            <ShoppingBag className="w-5 h-5" />
+            {getCartItemCount() > 0 && (
+              <span className="absolute -top-1 -right-1 bg-yellow-500 text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center animate-scale-in">
+                {getCartItemCount()}
+              </span>
+            )}
+          </Button>
+
           <Button className="hidden sm:flex bg-green-600 hover:bg-green-700 text-white" onClick={openWhatsApp}>
             <MessageCircle className="w-4 h-4 mr-2" />
             WhatsApp
@@ -75,8 +94,22 @@ export function Header() {
                 {link.name}
               </Link>
             ))}
+            
+            {/* Mobile Cart Trigger */}
             <Button
-              className="mt-4 bg-green-600 hover:bg-green-700 text-white"
+              variant="outline"
+              className="mt-4 border-yellow-500 text-yellow-500 hover:bg-yellow-500/10 flex items-center justify-center gap-2"
+              onClick={() => {
+                setIsMenuOpen(false);
+                setIsCartOpen(true);
+              }}
+            >
+              <ShoppingBag className="w-4 h-4" />
+              View Cart ({getCartItemCount()})
+            </Button>
+
+            <Button
+              className="mt-2 bg-green-600 hover:bg-green-700 text-white"
               onClick={() => {
                 setIsMenuOpen(false)
                 openWhatsApp()

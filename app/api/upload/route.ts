@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
+import { put } from '@vercel/blob';
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,47 +14,51 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No file provided in request' }, { status: 400 });
     }
 
-    // Convert file data to node stream
+    // Convert file data to an array buffer for writing
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
     /* ==========================================================================
-       PHASE 1: Local Development Storage System
-       Saves files to public/uploads directory.
+       OPTION 1: VERCEL BLOB CLOUD UPLOAD (PRODUCTION ACTIVE STATE)
+       Automatically runs if the secure read/write token is configured.
+       ========================================================================== */
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      // Upload directly to Vercel's edge network
+      const blob = await put(file.name, file, { 
+        access: 'public',
+        contentType: file.type 
+      });
+
+      return NextResponse.json({ 
+        success: true, 
+        url: blob.url,
+        provider: 'Vercel Blob' 
+      }, { status: 201 });
+    }
+
+    /* ==========================================================================
+       OPTION 2: LOCAL DISK UPLOAD (DEVELOPMENT FALLBACK STATE)
+       Gracefully falls back to public/uploads directory if offline or unconfigured.
        ========================================================================== */
     const uploadDirectory = path.join(process.cwd(), 'public', 'uploads');
     
-    // Ensure nested folder structure exists
+    // Ensure nested folder structure exists locally
     await mkdir(uploadDirectory, { recursive: true });
 
     // Generate randomized web-safe file path name
     const cleanFileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
     const destinationPath = path.join(uploadDirectory, cleanFileName);
 
-    // Save image to filesystem
+    // Save image to local disk
     await writeFile(destinationPath, buffer);
 
     // Provide relative browser-accessible endpoint URL
     const fileUrl = `/uploads/${cleanFileName}`;
 
-    /* ==========================================================================
-       PHASE 2: Cloud Storage Integration (Optional Production Swap-out)
-       For serverless hosting (Vercel), uncomment and configure your cloud bucket:
-       
-       // Example - Vercel Blob:
-       // import { put } from '@vercel/blob';
-       // const blob = await put(file.name, file, { access: 'public' });
-       // const fileUrl = blob.url;
-
-       // Example - Cloudinary:
-       // const uploadResult = await uploadToCloudinary(buffer);
-       // const fileUrl = uploadResult.secure_url;
-       ========================================================================== */
-
     return NextResponse.json({ 
       success: true, 
       url: fileUrl,
-      provider: process.env.NODE_ENV === 'production' ? 'Production cloud warning' : 'Local system'
+      provider: 'Local Storage Fallback'
     }, { status: 201 });
 
   } catch (error) {
