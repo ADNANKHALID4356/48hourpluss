@@ -3,12 +3,9 @@
 import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
-import { Header } from '@/components/header'
-import { Footer } from '@/components/footer'
-import { WhatsAppFloat } from '@/components/whatsapp-float'
 import './globals.css'
-import { CartProvider } from '../components/CartProvider'
-import CartDrawer from '../components/CartDrawer'
+import { CartProvider } from '@/components/CartProvider'
+import StorefrontWrapper from '@/components/StorefrontWrapper' // <-- Import the conditional wrapper
 
 export const metadata: Metadata = {
   title: {
@@ -36,16 +33,12 @@ html {
 }
         `}</style>
       </head>
-      <body className="bg-black text-white min-h-screen">
-        {/* Wrap your entire application inside the dynamic Cart Provider */}
+      <body className="bg-black text-white min-h-screen" suppressHydrationWarning={true}>
         <CartProvider>
-          <Header />
-          <main>{children}</main>
-          <Footer />
-          <WhatsAppFloat />
-          
-          {/* Mount the interactive Cart sliding drawer globally */}
-          <CartDrawer />
+          {/* Wrap all children in the storefront controller wrapper */}
+          <StorefrontWrapper>
+            {children}
+          </StorefrontWrapper>
         </CartProvider>
       </body>
     </html>
