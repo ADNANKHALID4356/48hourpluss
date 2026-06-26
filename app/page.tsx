@@ -6,8 +6,8 @@ import { ProductShowcase } from "@/components/product-showcase"
 import { VideoShowcase } from "@/components/video-showcase"
 import { TestimonialsSection } from "@/components/testimonials-section"
 import { HomeCtaSection } from "@/components/home-cta-section"
+import { IngredientBreakdown } from "@/components/ingredient-breakdown"
 import { getHeroSlides, getProducts, getShowcaseVideos } from "@/lib/db"
-
 // Enable Incremental Static Regeneration: Cache the page on the Edge for 1 hour [1]
 export const revalidate = 3600; 
 
@@ -35,7 +35,9 @@ export default async function HomePage() {
 
       {/* 3. PRODUCT SHOWCASE */}
       <ProductShowcase products={products} videos={videos} />
-
+       
+      <IngredientBreakdown />
+      
       {/* 5. CINEMATIC VIDEO THEATER */}
       <VideoShowcase videos={videos} />
 

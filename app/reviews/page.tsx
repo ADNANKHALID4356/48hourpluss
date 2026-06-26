@@ -22,9 +22,9 @@ export default async function ReviewsPage() {
     /* 
        FORCED OBSIDIAN-HONEY CANVAS:
        Applied your signature 3-stop luxury dark gradient directly to the main container.
-       This guarantees the testimonials page matches the home page aesthetic on any browser [1].
+       This guarantees the testimonials page matches the home page aesthetic on any browser.
     */
-    <main className="min-h-screen bg-gradient-to-b from-[#000000] via-[#080602] to-[#170f03] text-zinc-100 py-12 pt-24 px-6 sm:px-8 lg:px-12 transition-colors duration-300 ease-in-out">
+    <main className="min-h-screen bg-gradient-to-b from-[#000000] via-[#080602] to-[#170f03] text-zinc-100 py-12 mt-24 px-6 sm:px-8 lg:px-12 transition-colors duration-300 ease-in-out">
       
       {/* Dynamic breadcrumb navigation */}
       <nav className="mb-8 max-w-7xl mx-auto">
@@ -43,10 +43,10 @@ export default async function ReviewsPage() {
             What Our <span className="bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500 bg-clip-text text-transparent font-medium">Customers</span> Say
           </h1>
           <p className="text-zinc-400 font-light text-base leading-relaxed">
-            See honest video reviews and verified feedback from customers who have experienced our formula [1].
+            See honest video reviews and verified feedback from customers who have experienced our formula.
           </p>
         </div>
-
+      </div>
         {/* ====================================================
            SECTION 1: CUSTOMER VIDEO REVIEWS GALLERY
            ==================================================== */}
@@ -74,7 +74,7 @@ export default async function ReviewsPage() {
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                       {video.author}
                     </h4>
-                    <p className="text-xs text-zinc-500 mt-0.5">Verified Purchase</p>
+                    <p className="text-xs text-zinc-500 mt-0.5">Verified Customer • Active Video</p>
                   </div>
                 </div>
               ))}
@@ -89,56 +89,55 @@ export default async function ReviewsPage() {
           <section className="space-y-8">
             <h2 className="text-xl sm:text-2xl font-bold text-yellow-400 font-serif border-b border-zinc-900 pb-3 flex items-center gap-2">
               <span>💬</span> Verified Purchase Reviews
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {textReviews.map((t: TextReview) => (
-                <div 
-                  key={t.id} 
-                  className="rounded-3xl border border-zinc-900 bg-zinc-950/40 p-6 flex flex-col justify-between hover:border-yellow-500/20 transition-all duration-300 relative"
-                >
-                  <Quote className="absolute top-4 right-4 w-12 h-12 text-zinc-900/40 pointer-events-none" />
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {textReviews.map((t: TextReview) => (
+              <div 
+                key={t.id} 
+                className="rounded-3xl border border-zinc-900 bg-zinc-950/40 p-6 flex flex-col justify-between hover:border-yellow-500/20 transition-all duration-300 relative"
+              >
+                <Quote className="absolute top-4 right-4 w-12 h-12 text-zinc-900/40 pointer-events-none" />
 
-                  <div className="space-y-3">
-                    <div className="flex items-center text-amber-400">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-4 h-4 ${
-                            i < t.rating ? 'fill-amber-400 text-amber-400' : 'text-zinc-800'
-                          }`}
-                        />
-                      ))}
-                    </div>
-
-                    <p className="text-sm italic text-zinc-300 font-light leading-relaxed">
-                      &ldquo;{t.comment}&rdquo;
-                    </p>
+                <div className="space-y-3">
+                  <div className="flex items-center text-amber-400">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`w-4 h-4 ${
+                          i < t.rating ? 'fill-amber-400 text-amber-400' : 'text-zinc-800'
+                        }`}
+                      />
+                    ))}
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-zinc-900/60 flex items-center justify-between text-xs text-zinc-500">
-                    <span className="font-bold text-white">{t.author}</span>
-                    <span>{t.date}</span>
-                  </div>
+                  <p className="text-sm italic text-zinc-300 font-light leading-relaxed">
+                    &ldquo;{t.comment}&rdquo;
+                  </p>
                 </div>
-              ))}
-            </div>
-          </section>
-        )}
 
-        {/* Global Conversions CTA */}
-        <div className="text-center border-t border-zinc-900 pt-16">
-          <h3 className="text-xl font-bold text-white mb-2 font-serif">Have questions before buying?</h3>
-          <p className="text-sm text-zinc-400 mb-8 font-light">Join thousands of satisfied customers. Inquire directly on chat.</p>
-          <Link href="https://wa.me/923194405935?text=Hi, I am looking at customer reviews and have some questions." passHref>
-            <Button
-              size="lg"
-              className="bg-green-600 hover:bg-green-700 text-white text-md px-10 py-6 h-auto font-semibold transition-all duration-300 hover:scale-105 shadow-lg shadow-green-600/10 flex items-center justify-center gap-2 mx-auto"
-            >
-              <MessageCircle className="w-5 h-5" />
-              Inquire via WhatsApp
-            </Button>
-          </Link>
-        </div>
+                <div className="mt-6 pt-4 border-t border-zinc-900/60 flex items-center justify-between text-xs text-zinc-500">
+                  <span className="font-bold text-white">{t.author}</span>
+                  <span>{t.date}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Global Conversions CTA */}
+      <div className="text-center border-t border-zinc-900 pt-16">
+        <h3 className="text-xl font-bold text-white mb-2 font-serif">Have questions before buying?</h3>
+        <p className="text-sm text-zinc-400 mb-8 font-light">Join thousands of satisfied customers. Inquire directly on chat.</p>
+        <Link href="https://wa.me/923194405935?text=Hi, I am looking at customer reviews and have some questions." passHref>
+          <Button
+            size="lg"
+            className="bg-green-600 hover:bg-green-700 text-white text-md px-10 py-6 h-auto font-semibold transition-all duration-300 hover:scale-105 shadow-lg shadow-green-600/10 flex items-center justify-center gap-2 mx-auto"
+          >
+            <MessageCircle className="w-5 h-5" />
+            Inquire via WhatsApp
+          </Button>
+        </Link>
       </div>
     </main>
   );
